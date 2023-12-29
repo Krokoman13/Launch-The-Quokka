@@ -679,13 +679,68 @@ namespace GXPEngine
 			}
 		}
 
+		protected void sendMessage(GameObject target, string message) {
+			target.recieveMessage(message);
+		}
+
+		public virtual void recieveMessage(string message)
+		{
+		}
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														ToString()
 		//------------------------------------------------------------------------------------------------------------------------
 		public override string ToString() {
 			return "[" + this.GetType().Name + "::" + name + "]";
 		}
-				
+
+		protected void MoveTowards(GameObject target, float speed)
+		{
+			float xDiff = Math.Abs(x - target.x);
+			float yDiff = Math.Abs(y - target.y);
+
+			float dX = 0;
+			float dY = 0;
+
+			if (xDiff < speed)
+			{
+				x = target.x;
+				xDiff = 0;
+			}
+			if (yDiff < speed)
+			{
+				y = target.y;
+				yDiff = 0;
+			}
+
+			if (DistanceTo(target) <= speed)
+			{
+				x = target.x;
+				y = target.y;
+			}
+			else
+			{
+				if (yDiff > 0 && xDiff > 0)
+				{
+					speed = speed * 0.8f;
+				}
+
+				if (yDiff > speed)
+				{
+					if (y < target.y) dY = speed;
+					else dY = -speed;
+				}
+
+				if (xDiff > speed)
+				{
+					if (x < target.x) dX = speed;
+					else dX = -speed;
+				}
+
+				x += dX;
+				y += dY;
+			}
+		}
 	}
 }
 
